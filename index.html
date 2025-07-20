@@ -4,13 +4,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loki Keyboard 🐍</title>
 
-  <script>
-    const allowedPassword = "9911";
-    const userInput = prompt("🔒 Enter Access Password:");
-    if (userInput !== allowedPassword) {
-      document.body.innerHTML = "<h2 style='color:red;'>❌ Access Denied</h2>";
-    }
-  </script>
+    <script>
+  const allowedPassword = "9911";
+  const userInput = prompt("🔒 Enter Access Password:");
+
+  if (userInput !== allowedPassword) {
+    document.write("<h2 style='color:red;'>❌ Access Denied</h2>");
+    throw new Error("Access Denied");
+  }
+</script>
 
   <style>
     * { box-sizing: border-box; transition: 0.3s; }
