@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loki Keyboard 🐍</title>
+  <style>
+    * { box-sizing: border-box; transition: 0.3s; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #111; color: #eee; text-align: center; padding: 30px;
+    }
+    h1 {
+      color: #00ff88; text-shadow: 1px 1px 5px #00ff8844; margin-bottom: 20px;
+    }
+    textarea, #outputBox {
+      width: 80%; max-width: 600px; border-radius: 10px; padding: 10px;
+      background: #333; color: #fff; margin: 10px auto; display: block;
+      border: none; font-size: 18px; box-shadow: 0 0 10px #00000055;
+    }
+    #outputBox {
+      background: #222; border: 1px solid #00ff88aa; color: #00ff88;
+      white-space: pre-wrap; word-wrap: break-word;
+    }
+    .btn {
+      margin: 5px; padding: 10px 20px; border-radius: 8px; border: none;
+      background: #00ff88; color: #111; cursor: pointer; box-shadow: 0 0 10px #00ff8855;
+    }
+    .btn:hover { background: #00cc6a; }
+    .footer { margin-top: 30px; font-size: 14px; color: #888; }
+  </style>
+</head>
+<body>
+  <h1>Loki Keyboard 🐍</h1>
+  <textarea id="banglaInput" placeholder="এখানে বাংলা লিখ"></textarea>
+  <div>
+    <button class="btn" onclick="pasteText()">📋 Paste</button>
+    <button class="btn" onclick="clearText()">🧹 Clear</button>
+    <button class="btn" onclick="copyText()">✅ Copy</button>
+  </div>
+  <div id="outputBox"></div>
+  <div class="footer">Created with ❤️ by Loki</div>  <script>
+    const map = {
+      "অ":"o","আ":"a","ই":"i","ঈ":"ee","উ":"u","ঊ":"oo","এ":"e","ঐ":"oi","ও":"o","ঔ":"ou",
+      "ক":"k","খ":"kh","গ":"g","ঘ":"gh","ঙ":"ng","চ":"ch","ছ":"chh","জ":"j","ঝ":"jh","ঞ":"n",
+      "ট":"t","ঠ":"th","ড":"d","ঢ":"dh","ণ":"n","ত":"t","থ":"th","দ":"d","ধ":"dh","ন":"n",
+      "প":"p","ফ":"ph","ব":"b","ভ":"bh","ম":"m","য":"j","র":"r","ল":"l","শ":"sh","ষ":"sh","স":"s","হ":"h",
+      "ড়":"r","ঢ়":"rh","য়":"y","ং":"ng","ঃ":"h","ঁ":"n",
+      "া":"a","ি":"i","ী":"ee","ু":"u","ূ":"oo","ে":"e","ৈ":"oi","ো":"o","ৌ":"ou",
+      "০":"0","১":"1","২":"2","৩":"3","৪":"4","৫":"5","৬":"6","৭":"7","৮":"8","৯":"9",
+      "।":"."," ":" "
+    };
+
+    const compounds = {
+      "ক্ত্র":"ktr","ক্ত":"kt","ক্র":"kr","গ্র":"gr","প্র":"pr","ত্র":"tr","ষ্ট":"sht","স্থ":"sth",
+      "স্ত":"st","স্ত্র":"str","শ্র":"shr","শ্ন":"shn","শ্ব":"shw","শ্ল":"shl","শ্চ":"shch","স্ম":"sm",
+      "স্ন":"sn","স্ব":"sw","সন্ত্রাস":"santrash","শান্ত":"shant","বিশ্ব":"bishwo","বন্ধু":"bondhu","স্মৃতি":"smriti",
+      "জ্ঞ":"gg","গ্ন":"gn","ন্ড":"nd","ন্ধ":"ndh","ত্ত":"tt","দ্ব":"dv","ব্ধ":"bdh","জ্জ":"jj","চ্ছ":"chh",
+      "ম্ম":"mm","ব্ব":"bb","ল্ল":"ll","ন্ন":"nn","ক্ক":"kk","গ্গ":"gg","ভ্র":"bhr","হ্ম":"hm","শ্ব্র":"shwr",
+      "মতো":"moto","কথা":"kotha","আমি":"ami","তুমি":"tumi","আমরা":"amra","আপনি":"apni","কি":"ki","কেন":"keno",
+      "কখন":"kokhon","কিভাবে":"kibhabe","কিছু":"kichu","সব":"shob","তাই":"tai","আছে":"ache","কর":"kor","করব":"korbo",
+      "হবে":"hobe","হয়":"hoy","হলো":"holo","করি":"kori","আসবে":"ashbe","বল":"bol","বলেছি":"bolechi","বলবে":"bolbe",
+      "নিয়ে":"niye","দেখি":"dekhi","দিতে":"dite","দিল":"dil","দিতে হবে":"dite hobe","যাবে":"jabe","যেতে":"jete",
+      "হয়েছে":"hoyeche","তোমার":"tomar","আমার":"amar","তাদের":"tader","আমাদের":"amader","করেছে":"koreche","করছি":"korchi",
+      "করবে":"korbe","করতে":"korte","যাচ্ছে":"jachchhe","যাচ্ছি":"jachchi","গেছে":"geche","গেল":"gelo","গেলাম":"gelam",
+      "আসছে":"aschhe","আসি":"ashi","গেলো":"gelo","গিয়েছে":"giyeche","যাচ্ছ":"jachchho","যাবে":"jabe","জান":"jan",
+      "জানি":"jani","জানবে":"janbe","জানতে":"jante","দেখতে":"dekhte","দেখবে":"dekhbe","দেখলাম":"dekhlam","দেখিয়েছে":"dekhiyeche",
+      "আসবে":"ashbe","আসার":"ashar","আসতে":"ashte","গিয়েছিল":"giyechhilo","করেছেন":"korechen","করা হয়েছে":"kora hoyeche",
+      "জানিয়েছে":"janiyeche","চাই":"chai","চাওয়া":"chawa","চাচ্ছে":"chachchhe","চেয়েছি":"cheyechi","চেয়েছিলাম":"cheyechilam",
+      "খুব":"khub","ভালো":"bhalo","খারাপ":"kharap","নয়":"noy","হতে":"hote","চেষ্টা":"chesta","করার":"korar","করেছে":"koreche",
+      "কিছুই":"kichui","কিছুটা":"kichuta","কম":"kom","বেশি":"beshi","অনেক":"onek","আবার":"abar","অন্য":"onnno","সবাই":"sobai",
+      "কেউ":"keu","কিছুক্ষণ":"kichukhon","আজ":"aj","কাল":"kal","আগামী":"agami","আগে":"age","পরে":"pore","এখন":"ekhon",
+      "তখন":"tokhon","এরপর":"erpor","এবং":"ebong","বা":"ba","কিন্তু":"kintu","তথা":"totha","অথবা":"othoba","কারণ":"karon",
+      "যদি":"jodi","যেহেতু":"jehetu","তাই":"tai","তথ্য":"tottho","তাদেরকে":"taderke","আপনাদের":"apnader","আমাদেরকে":"amaderke",
+      "করেছেন":"korechen","করা হয়েছে":"kora hoyeche","গেলেন":"gelen","করলেন":"korlen","বললেন":"bollen","দিলেন":"dilen",
+      "হয়েছিল":"hoyeche","হয়েছিলো":"hoyechilo","আসেন":"ashen","দেখেন":"dekhen","যাচ্ছেন":"jachchhen","দেখেছেন":"dekhechen",
+      "হবে":"hobe","হয়েছে":"hoyeche","হলো":"holo","করলাম":"korlam","করতে হবে":"korte hobe"
+    };
+
+    function normalize(text) {
+      return text.replace(/য়/g, "্য");
+    }
+
+    function convert(text) {
+      text = normalize(text);
+      let out = text;
+      Object.keys(compounds).sort((a,b) => b.length - a.length).forEach(k => {
+        out = out.split(k).join(compounds[k]);
+      });
+      out = out.split('').map(c => map[c] || c).join('');
+      return out;
+    }
+
+    document.getElementById('banglaInput').addEventListener('input', e => {
+      document.getElementById('outputBox').innerText = convert(e.target.value);
+    });
+
+    function copyText() {
+      const t = document.getElementById('outputBox').innerText;
+      if (!t) return alert("কোনো টেক্সট নেই কপি করার জন্য!");
+      navigator.clipboard.writeText(t).then(() => alert("✅ কপি হয়ে গেছে!"));
+    }
+
+    async function pasteText() {
+      try {
+        const t = await navigator.clipboard.readText();
+        document.getElementById('banglaInput').value = t;
+        document.getElementById('banglaInput').dispatchEvent(new Event('input'));
+      } catch {
+        alert("❌ পেস্ট করতে পারিনি। অনুমতি চেক কর!");
+      }
+    }
+
+    function clearText() {
+      document.getElementById('banglaInput').value = '';
+      document.getElementById('outputBox').innerText = '';
+    }
+  </script></body>
+</html>
