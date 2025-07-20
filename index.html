@@ -1,19 +1,26 @@
-<!DOCTYPE html><html lang="bn">
+<!DOCTYPE html>
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loki Keyboard 🐍</title>
 
-    <script>
-  const allowedPassword = "9911";
-  const userInput = prompt("🔒 Enter Access Password:");
-
-  if (userInput !== allowedPassword) {
-    document.write("<h2 style='color:red;'>❌ Access Denied</h2>");
-    throw new Error("Access Denied");
-  }
-</script>
-
+  <script>
+    const allowedPassword = "9911";
+    let accessGranted = false;
+    while (!accessGranted) {
+      const userInput = prompt("🔒 Enter Access Password:");
+      if (userInput === null) {
+        // ইউজার ক্যান্সেল দিলে আবার পাসওয়ার্ড চাইবে
+        continue;
+      }
+      if (userInput === allowedPassword) {
+        accessGranted = true;
+      } else {
+        alert("❌ ভুল পাসওয়ার্ড! আবার চেষ্টা করো।");
+      }
+    }
+  </script>
   <style>
     * { box-sizing: border-box; transition: 0.3s; }
     body {
