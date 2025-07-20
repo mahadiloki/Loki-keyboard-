@@ -3,6 +3,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loki Keyboard 🐍</title>
+
+  <script>
+    const allowedPassword = "9911";
+    const userInput = prompt("🔒 Enter Access Password:");
+    if (userInput !== allowedPassword) {
+      document.body.innerHTML = "<h2 style='color:red;'>❌ Access Denied</h2>";
+    }
+  </script>
+
   <style>
     * { box-sizing: border-box; transition: 0.3s; }
     body {
@@ -38,7 +47,9 @@
     <button class="btn" onclick="copyText()">✅ Copy</button>
   </div>
   <div id="outputBox"></div>
-  <div class="footer">Created with ❤️ by Loki</div>  <script>
+  <div class="footer">Created with ❤️ by Loki</div>
+
+  <script>
     const map = {
       "অ":"o","আ":"a","ই":"i","ঈ":"ee","উ":"u","ঊ":"oo","এ":"e","ঐ":"oi","ও":"o","ঔ":"ou",
       "ক":"k","খ":"kh","গ":"g","ঘ":"gh","ঙ":"ng","চ":"ch","ছ":"chh","জ":"j","ঝ":"jh","ঞ":"n",
@@ -114,5 +125,6 @@
       document.getElementById('banglaInput').value = '';
       document.getElementById('outputBox').innerText = '';
     }
-  </script></body>
-</html>
+  </script>
+</body>
+      </html>
